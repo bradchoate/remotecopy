@@ -33,6 +33,8 @@ my $port    = $config->{port} || $options{port} || 12345;
 
 my $growlnotify_location = `/usr/bin/which growlnotify`;
 chomp $growlnotify_location;
+my $terminalnotify_location = `/usr/bin/which terminal-notifier`;
+chomp $terminalnotify_location;
 
 my $sock = IO::Socket::INET->new(
     Proto     => 'tcp',
@@ -105,6 +107,9 @@ sub notify {
 
     if ($growlnotify_location) {
         system( $growlnotify_location, "-m", $message );
+    }
+    elsif ($terminalnotify_location) {
+        system( $terminalnotify_location, "-title", "remotecopy", "-message", $message );
     }
     else {
         print "$message\n";
